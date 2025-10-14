@@ -3,7 +3,7 @@ import User from "../model/userModel";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { UserAuthI } from "../utils/userAuth";
-import { error } from "console";
+import { Op } from "sequelize";
 
 export const userSignUp = async (req: Request, res: Response) => {
   try {
@@ -78,5 +78,52 @@ export const userLogout = (req: UserAuthI, res: Response) => {
   } catch (error) {
     console.log("[Error in userLogout ]", error);
     res.status(500).json({ error: "Internal server Error!" });
+  }
+};
+
+export const checkAuth = async (req: UserAuthI, res: Response) => {
+  console.log(req.body);
+  try {
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized!!!" });
+    }
+    const { id, email } = req.user;
+
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) res.status(404).json({ message: "User not found!!!" });
+
+    res.status(200).json({
+      id,
+      email,
+      username: user.username,
+    });
+    console.log(user);
+  } catch (error) {
+    console.error("Error in currentUser:", error);
+    return res.status(500).json({ error: "Server error" });
+  }
+};
+
+export const getUsers = async (req: UserAuthI, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized!!!" });
+    }
+    const { id } = req.user;
+    const users = await User.findAll({
+      where: {
+        id: {
+          [Op.ne]: id,
+        },
+      },
+    });
+    res.status(200).json({
+      users,
+    });
+  } catch (error) {
+    console.error(error);
+    console.error("Error in currentUser:", error);
+    return res.status(500).json({ error: "Server error" });
   }
 };

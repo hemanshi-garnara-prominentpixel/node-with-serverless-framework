@@ -1,10 +1,10 @@
 import React from "react";
-import SignUp from "./pages/SignUp";
+import DashboardRouter from "./routes/DashboardRouter";
 
 const App = () => {
   return (
     <>
-      <SignUp />
+      <DashboardRouter />
     </>
   );
 };
