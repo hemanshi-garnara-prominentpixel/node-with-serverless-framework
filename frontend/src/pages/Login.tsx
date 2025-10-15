@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, type FormEvent } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthProvide";
 
 interface LoginDataI {
   email: string;
@@ -13,6 +14,7 @@ const Login = () => {
     password: "",
   });
 
+  const { refreshAuth } = useAuth();
   const navigate = useNavigate();
 
   const handleLoginData = async (e: FormEvent) => {
@@ -30,6 +32,7 @@ const Login = () => {
       if (!userLogin) throw new Error("Login faield!");
 
       console.log("Login successfully!");
+      await refreshAuth();
       navigate("/dashboard");
       setLoginData({ email: "", password: "" });
     } catch (error) {

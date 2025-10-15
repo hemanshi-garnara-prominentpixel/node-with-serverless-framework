@@ -50,6 +50,8 @@ export const userLogin = async (req: Request, res: Response) => {
     if (!isPasswordValid)
       return res.status(401).json({ error: "Invalid credentials!" });
 
+    await user.update({ status: "Active" });
+
     const token = jwt.sign(
       { id: user.id, email: user.email },
       process.env.JWT_SECRET!,
@@ -69,11 +71,17 @@ export const userLogin = async (req: Request, res: Response) => {
   }
 };
 
-export const userLogout = (req: UserAuthI, res: Response) => {
+export const userLogout = async (req: UserAuthI, res: Response) => {
   try {
     const email = req.user?.email;
     if (!email) return res.status(401).json({ error: "Email not found!" });
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(404).json({ error: "User not found!" });
+
+    await user.update({ status: "Inactive" });
     res.clearCookie("token");
+
     res.json({ message: "Logged out" });
   } catch (error) {
     console.log("[Error in userLogout ]", error);
@@ -97,6 +105,7 @@ export const checkAuth = async (req: UserAuthI, res: Response) => {
       id,
       email,
       username: user.username,
+      status: user.status,
     });
     console.log(user);
   } catch (error) {

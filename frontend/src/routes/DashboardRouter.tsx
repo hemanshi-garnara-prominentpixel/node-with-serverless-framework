@@ -8,6 +8,7 @@ import {
 import Login from "../pages/Login";
 import SignUp from "../pages/SignUp";
 import Dashboard from "../pages/Dashboard";
+import ProtectedRoutes from "./ProtectedRoutes";
 
 const DashboardRouter = () => {
   const router = createBrowserRouter(
@@ -17,7 +18,14 @@ const DashboardRouter = () => {
           <Route path="login" element={<Login />} />
         </Route>
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoutes>
+              <Dashboard />
+            </ProtectedRoutes>
+          }
+        />
       </Route>
     )
   );

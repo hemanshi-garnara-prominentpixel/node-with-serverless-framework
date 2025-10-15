@@ -21,7 +21,7 @@ export const checkDatabaseConnection = async () => {
     await sequelize.authenticate();
     console.log("Database connected successfully!");
 
-    await sequelize.sync({ alert: true });
+    await sequelize.sync({ alter: true });
     console.log("Tables synced!");
   } catch (error) {
     console.error("Unable to start server:", error);

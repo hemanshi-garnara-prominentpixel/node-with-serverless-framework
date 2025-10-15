@@ -20,4 +20,5 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 checkDatabaseConnection();
+
 export const handler = ServerlessHttp(app);

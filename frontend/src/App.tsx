@@ -1,10 +1,13 @@
 import React from "react";
 import DashboardRouter from "./routes/DashboardRouter";
+import AuthProvider from "./context/AuthProvide";
 
 const App = () => {
   return (
     <>
-      <DashboardRouter />
+      <AuthProvider>
+        <DashboardRouter />
+      </AuthProvider>
     </>
   );
 };
